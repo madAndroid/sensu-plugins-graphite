@@ -18,8 +18,11 @@ class GraphiteOccurrences < Sensu::Handler
     value = @event['action'] == 'create' ? @event['occurrences'] : 0
     now = Time.now.to_i
 
+    # Set a custom scheme, if we've provided one:
+    scheme = settings['graphite']['scheme'].nil? ? 'sensu' : settings['graphite']['scheme']
+
     # Get Graphite-like format for Sensu events here
-    check_occurrences = "sensu.#{hostname}.#{check_name} #{value} #{now}"
+    check_occurrences = "#{scheme}.#{hostname}.#{check_name} #{value} #{now}"
 
     graphite_server = settings['graphite']['server']
     graphite_port = settings['graphite']['port']
